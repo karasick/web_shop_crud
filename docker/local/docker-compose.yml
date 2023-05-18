@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:latest
+    env_file: .env.dev
+    volumes:
+      - ./data/mongo:/data/db
+    ports:
+      - '27027:27017'
