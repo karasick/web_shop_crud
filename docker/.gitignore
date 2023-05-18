@@ -1,2 +1,6 @@
+# data
 ./local/data
+./local/data/
+
+# env
 ./local/.env.dev
