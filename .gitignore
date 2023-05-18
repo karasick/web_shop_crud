@@ -1,12 +1,11 @@
 # project
 /target
 
-#docker
-./docker/local/data
-./docker/local/data/
-
 # env
 .env.dev
 
 # ide
 .idea
+
+# macos
+.DS_Store
