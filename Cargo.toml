@@ -9,6 +9,8 @@ edition = "2021"
 actix-web = "4"
 dotenv = "0.15.0"
 serde = "1.0.163"
+async-trait = "0.1.68"
+env_logger = "0.10.0"
 
 [dependencies.tokio]
 version = "1.28.1"

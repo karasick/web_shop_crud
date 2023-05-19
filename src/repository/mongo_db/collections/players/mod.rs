@@ -1,2 +1,2 @@
-pub mod player_repository;
+pub mod players_mongodb;
 pub mod player_schema;

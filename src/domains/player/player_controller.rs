@@ -1,24 +1,17 @@
 use actix_web::{
+    HttpResponse,
     post,
     web::{Data, Json},
-    HttpResponse,
 };
 use crate::domains::player::player_service::PlayersService;
-use crate::repository::mongo_db::collections::players::player_repository::{PlayerCollection};
-use crate::repository::mongo_db::collections::players::player_schema::PlayerSchema;
+use crate::repository::domains::players::dtos::create_player_dto::CreatePlayerDto;
+use crate::repository::mongo_db::collections::players::players_mongodb::PlayersMongodb;
 
 #[post("/player")]
-pub async fn create_player(collection: Data<PlayerCollection>, new_player: Json<PlayerSchema>) -> HttpResponse {
-    let player_service = PlayersService::init(collection.get_ref().to_owned());
-
-    let data = PlayerSchema {
-        _id: None,
-        name: new_player.name.to_owned(),
-        gold: new_player.gold.to_owned(),
-    };
-    let player_details = player_service.create_player(data).await;
+pub async fn create_player(repository: Data<PlayersMongodb>, new_player: Json<CreatePlayerDto>) -> HttpResponse {
+    let player_details = PlayersService::create_player(repository.get_ref(), new_player).await;
     match player_details {
-        Ok(player) => HttpResponse::Ok().json(player),
+        Ok(details) => HttpResponse::Ok().json(details),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

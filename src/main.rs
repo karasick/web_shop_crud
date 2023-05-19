@@ -5,7 +5,7 @@ use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use actix_web::web::Data;
 use dotenv::from_filename;
 use crate::domains::player::player_controller::create_player;
-use crate::repository::mongo_db::collections::players::player_repository::PlayersRepository;
+use crate::repository::mongo_db::collections::players::players_mongodb::PlayersMongodb;
 use crate::repository::mongo_db::connection_factory::get_mongodb_connection;
 
 #[get("/")]
@@ -17,15 +17,16 @@ async fn hello() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     // for env vars in dev
     from_filename(".env.dev").ok();
+    env_logger::init();
 
     let db = get_mongodb_connection().await.unwrap();
-    let players_repository = PlayersRepository::init(db.clone()).await;
 
-    let players_collection = Data::new(players_repository.col);
+    let players_db = PlayersMongodb::init(db.clone()).await;
+    let players_data = Data::new(players_db);
 
     HttpServer::new(move || {
         App::new()
-            .app_data(players_collection.clone())
+            .app_data(players_data.clone())
             .service(hello)
             .service(create_player)
     })
